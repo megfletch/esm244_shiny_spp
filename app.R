@@ -2,8 +2,9 @@
 
 library(tidyverse)
 library(shiny)
+library(shinythemes)
 
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme("cerulean"),
   
   navbarPage("US National Park Biological Diversity App",
              tabPanel("US National Park Information",

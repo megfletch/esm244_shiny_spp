@@ -1,0 +1,12 @@
+/* MY THEME */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+/*Changes background color */
+
+body{
+  background-color: lightblue;
+  font-family: "Poppins";
+  color: red;
+}
+
