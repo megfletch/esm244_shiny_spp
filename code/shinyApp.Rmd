@@ -1,0 +1,27 @@
+---
+title: "shinyapp"
+author: "Danielle Sclafani"
+date: "2/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+
+```{r}
+# reading in the data
+parks_data <- read_csv(here("data", "parks.csv")) %>% 
+  clean_names() %>% 
+  filter(state %in% c("CA", "CA, NV"))
+
+
+species_data <- read_csv(here("data", "species.csv")) %>% 
+  clean_names() %>% 
+  filter(park_name %in% c("Channel Islands National Park", "Death Valley National Park", "Joshua Tree National Park", "Lassen Volcanic National Park", "Pinnacles National Park", "Redwood National Park", "Sequoia and Kings National Park", "Yosemite National Park"))
+```
+
