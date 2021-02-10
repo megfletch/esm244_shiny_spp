@@ -6,6 +6,13 @@ library(shinythemes)
 
 
 ui <- fluidPage(theme = shinytheme("cerulean"),
+                titlePanel("California National Park App"),
+                sidebarLayout(
+                  sidebarPanel(),
+                  mainPanel(
+                    p("This application can be used to access information regarding California's National Parks. Each tab provides different information including general park information, park locations, animal species within each park, and the park biological diversity index.")
+                  )
+                ),
   
   navbarPage("US National Park Biological Diversity App",
              tabPanel("US National Park Information",
