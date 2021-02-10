@@ -4,7 +4,6 @@ library(tidyverse)
 library(shiny)
 library(shinythemes)
 
-
 ui <- fluidPage(theme = shinytheme("cerulean"),
   
   navbarPage("US National Park Biological Diversity App",
@@ -18,7 +17,11 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                      hr(),
                                      fluidRow(column(3, verbatimTextOutput("value")))
                                      ),
-                        mainPanel("output1")
+                        mainPanel(
+                          tabsetPanel(type = "tab",
+                                      tabPanel("Park Map", plotOutput("plot")),
+                                      tabPanel("Summary", verbatimTextOutput("summary")))
+                        )
                       )
                       ),
              tabPanel("Park Locations",
@@ -29,7 +32,9 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                      hr(),
                                      fluidRow(column(4, verbatimTextOutput("value")))
                                      ),
-                        mainPanel("output2")
+                        mainPanel(tabsetPanel(type = "tab",
+                                              tabPanel("Graph", plotOutput("plot")),
+                                              tabPanel("Summary", verbatimTextOutput("summary"))))
                       )
                       ),
              tabPanel("Park Animal Species",
@@ -40,7 +45,9 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                      hr(),
                                      fluidRow(column(3, verbatimTextOutput("value")))
                                      ),
-                        mainPanel("output3")
+                        mainPanel(tabsetPanel(type = "tab",
+                                              tabPanel("Park Map", plotOutput("plot")),
+                                              tabPanel("Summary", verbatimTextOutput("summary"))))
                       )
                       ),
              tabPanel("Park Biological Diversity Index",
@@ -55,7 +62,9 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                        column(4, verbatimTextOutput("range"))
                                      )
                                      ),
-                        mainPanel("output4")
+                        mainPanel(tabsetPanel(type = "tab",
+                                              tabPanel("Species Stats", plotOutput("plot")),
+                                              tabPanel("Summary", verbatimTextOutput("summary"))))
                       )
                       )
              
