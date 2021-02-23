@@ -25,3 +25,31 @@ species_data <- read_csv(here("data", "species.csv")) %>%
   filter(park_name %in% c("Channel Islands National Park", "Death Valley National Park", "Joshua Tree National Park", "Lassen Volcanic National Park", "Pinnacles National Park", "Redwood National Park", "Sequoia and Kings National Park", "Yosemite National Park"))
 ```
 
+```{r}
+# widget 1 - CA parks radio button -> map images and summary appear
+
+```
+
+```{r}
+# widget 2
+```
+
+```{r}
+# widget 3
+species_category <- species_data %>% 
+  group_by(park_name, category) %>% 
+  count()
+
+
+ggplot(data = species_category, aes(x = park_name, y = n)) +
+  geom_col(aes(color=category)) +
+  facet_wrap(~category, scales = "free")
+```
+
+
+
+
+
+
+
+

@@ -13,12 +13,12 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                   )
                 ),
   
-  navbarPage("US National Park Biological Diversity App",
-             tabPanel("US National Park Information",
+  navbarPage("California National Park Biological Diversity App",
+             tabPanel("California National Park Information",
                       sidebarLayout(
                         sidebarPanel("widget1",
-                                     radioButtons("radio", label = h3("US National Parks:"),
-                                                  choices = list("Choice 1" = 1, "Choice 2" = 2, "Choice 3" = 3), 
+                                     radioButtons("radio", label = h3("California National Parks:"),
+                                                  choices = unique(parks_data$park_name), 
                                                   selected = 1),
                                      
                                      hr(),
@@ -44,17 +44,15 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                               tabPanel("Summary", verbatimTextOutput("summary"))))
                       )
                       ),
-             tabPanel("Park Animal Species",
+             tabPanel("Park Species Categories",
                       sidebarLayout(
                         sidebarPanel("widget3",
-                                     textInput("text", label = h3("Animal Look-Up"), value = "Enter text..."),
-                                     
-                                     hr(),
-                                     fluidRow(column(3, verbatimTextOutput("value")))
+                                     checkboxGroupInput(inputId = "species_category",
+                                                        label = "Select species category:",
+                                                        choices = unique(species_data$category))
                                      ),
-                        mainPanel(tabsetPanel(type = "tab",
-                                              tabPanel("Park Map", plotOutput("plot")),
-                                              tabPanel("Summary", verbatimTextOutput("summary"))))
+                        mainPanel("Bar Graph",
+                                  plotOutput("category_plot"))
                       )
                       ),
              tabPanel("Park Biological Diversity Index",
@@ -80,6 +78,23 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
   
 )
 
-server <- function(input, output) {}
+server <- function(input, output) {
+  
+  # Widget 3 - Species Categories
+  category_reactive <- reactive({
+    
+    species_data %>% 
+      group_by(park_name, category) %>% 
+      count()
+    
+  })
+  
+  output$category_plot <- renderPlot(
+    ggplot(data = category_reactive(), aes(x = park_name, y = n)) +
+      geom_col(aes(color=category)) +
+      facet_wrap(~category, scales = "free")
+  )
+  
+}
 
 shinyApp(ui = ui, server = server)
