@@ -21,14 +21,13 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                           radioButtons("radio", label = h3("California National Parks:"),
                                                   choices = unique(parks_data$park_name), 
                                                   selected = 1),
-                                     uiOutput("Image"),
                                      
                                      hr(),
                                      fluidRow(column(3, verbatimTextOutput("value")))
                                      ),
                         mainPanel(
                           tabsetPanel(type = "tab",
-                                      tabPanel("Park Map", plotOutput("plot")),
+                                      tabPanel("Park Map",  imageOutput("Image")),
                                       tabPanel("Summary", verbatimTextOutput("summary")))
                         )
                       )
@@ -118,20 +117,17 @@ server <- function(input, output) {
   # Widget 3 - Species Categories
   category_reactive <- reactive({
     
-    species_data %>% 
-      group_by(park_name, category) %>% 
-      count()
+    species_category_all %>% 
+      filter(category == input$species_category)
     
-  })
+  }) # widget 3 reactive parentheses
   
   output$category_plot <- renderPlot(
     
-    barplot(category_reactive[,input$species_category],
-            main=input$species_category,
-            ylab="Number of Species",
-            xlab="Park Name")
+    ggplot(data = category_reactive(), aes(x = park_name, y = n)) +
+      geom_col()
     
-  )
+  ) # widget 3 output parentheses
   
   # Widget 4
 }

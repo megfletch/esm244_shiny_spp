@@ -23,6 +23,10 @@ parks_data <- read_csv(here("data", "parks.csv")) %>%
 species_data <- read_csv(here("data", "species.csv")) %>% 
   clean_names() %>% 
   filter(park_name %in% c("Channel Islands National Park", "Death Valley National Park", "Joshua Tree National Park", "Lassen Volcanic National Park", "Pinnacles National Park", "Redwood National Park", "Sequoia and Kings National Park", "Yosemite National Park"))
+
+species_category_all <- species_data %>% 
+      group_by(park_name, category) %>% 
+      count()
 ```
 
 ```{r}
