@@ -41,8 +41,8 @@ species_category <- species_data %>%
   count()
 
 
-ggplot(data = species_category, aes(x = park_name, y = n)) +
-  geom_col(aes(color=category)) +
+ggplot(data = species_category, aes(x = park_name, y = n, fill = category)) +
+  geom_col() +
   facet_wrap(~category, scales = "free")
 ```
 
