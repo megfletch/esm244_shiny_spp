@@ -53,7 +53,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                           checkboxGroupInput(inputId = "region_selected", 
                                        label = h3("Select region:"),
                                        choices = unique(park_boundaries$nps_region), 
-                                                  selected = NULL),
+                                                  selected = "Pacific West"),
                                      
                                      hr(),
                                      fluidRow(column(3, verbatimTextOutput("value")))
@@ -65,20 +65,20 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                         )
                       )
                       ),
-             tabPanel("Species Locator",
-                      sidebarLayout(
-                        sidebarPanel(
-                          textInput(inputId = "species_locator",
-                                    label = h3("Text input"),
-                                    value = "Enter species name..."),
-                          hr(),
-                          fluidRow(column(3, verbatimTextOutput("locator")))
-                        ),
-                        mainPanel(tabsetPanel(type = "tab",
-                                              tabPanel("Graph", plotOutput("map")),
-                                              tabPanel("Summary", verbatimTextOutput("summary"))))
-                      )
-                      ),
+#             tabPanel("Species Locator",
+#                      sidebarLayout(
+#                        sidebarPanel(
+#                          textInput(inputId = "species_locator",
+#                                    label = h3("Text input"),
+#                                    value = "Enter species name..."),
+#                          hr(),
+#                          fluidRow(column(3, verbatimTextOutput("locator")))
+#                        ),
+#                        mainPanel(tabsetPanel(type = "tab",
+#                                              tabPanel("Graph", plotOutput("map")),
+#                                              tabPanel("Summary", verbatimTextOutput("summary"))))
+#                      )
+#                      ),
              tabPanel("Park Species Categories",
                       sidebarLayout(
                         sidebarPanel(selectInput(inputId = "species_category",
@@ -89,35 +89,35 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                      ),
                         mainPanel(plotOutput("category_plot"))
                       )
-                      ),
-             tabPanel("CA Park Images",
-                      sidebarLayout(
-                        sidebarPanel(
-                          radioButtons(inputId = "park_selected", 
-                                       label = h3("California National Parks:"),
-                                       choices = list("Channel Islands National Park" = 1,
-                                                      "Death Valley National Park" = 2,
-                                                      "Joshua Tree National Park" = 3,
-                                                      "Lassen Volcanic National Park" = 4,
-                                                      "Pinnacles National Park" = 5,
-                                                      "Redwood National Park" = 6,
-                                                      "Sequoia and Kings Canyon National Parks" = 7,
-                                                      "Yosemite National Park" = 8), 
-                                       selected = 1),
-                          
-                          hr(),
-                          fluidRow(column(3, verbatimTextOutput("value")))
-                        ),
-                        mainPanel(
-                          tabsetPanel(type = "tab",
-                                      tabPanel("Park Map",  uiOutput("Image")),
-                                      tabPanel("Summary", verbatimTextOutput("summary")))
-                        )
                       )
-                      )
-             
-    
- 
+#             tabPanel("CA Park Images",
+#                      sidebarLayout(
+#                        sidebarPanel(
+#                          radioButtons(inputId = "park_selected", 
+#                                       label = h3("California National Parks:"),
+#                                       choices = list("Channel Islands National Park" = 1,
+#                                                      "Death Valley National Park" = 2,
+#                                                      "Joshua Tree National Park" = 3,
+#                                                      "Lassen Volcanic National Park" = 4,
+#                                                      "Pinnacles National Park" = 5,
+#                                                      "Redwood National Park" = 6,
+#                                                      "Sequoia and Kings Canyon National Parks" = 7,
+#                                                      "Yosemite National Park" = 8), 
+#                                       selected = 1),
+#                          
+#                          hr(),
+#                          fluidRow(column(3, verbatimTextOutput("value")))
+#                        ),
+#                        mainPanel(
+#                          tabsetPanel(type = "tab",
+#                                      tabPanel("Park Map",  uiOutput("Image")),
+#                                      tabPanel("Summary", verbatimTextOutput("summary")))
+#                        )
+#                      )
+#                      )
+#             
+#    
+# 
              )  
 )
 
@@ -126,13 +126,13 @@ server <- function(input, output) {
   # Widget 1
   region_reactive <- reactive({
     park_boundaries %>% 
-      filter(nps_region == input$region_selected)
+      filter(nps_region %in% input$region_selected)
     
   }) # Widget 1 reactive parentheses
   
   output$region_plot <- renderTmap(
 
-    tm_shape(park_boundaries) +
+    tm_shape(region_reactive()) +
       tm_polygons()
     
   ) # widget 1 output parentheses
