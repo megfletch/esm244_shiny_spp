@@ -156,7 +156,11 @@ server <- function(input, output) {
   output$category_plot <- renderPlot(
     
     ggplot(data = category_reactive(), aes(x = park_name, y = n)) +
-      geom_col()
+      geom_col(aes(fill = park_name)) +
+      coord_flip() +
+      theme_bw() +
+      theme(legend.position = "none") +
+      labs(x = "", y = "Number of Species")
     
   ) # widget 3 output parentheses
   
