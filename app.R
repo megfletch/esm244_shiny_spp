@@ -18,8 +18,16 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
              tabPanel("California National Park Information",
                       sidebarLayout(
                         sidebarPanel(
-                          radioButtons("radio", label = h3("California National Parks:"),
-                                                  choices = unique(parks_data$park_name), 
+                          radioButtons(inputId = "park_selected", 
+                                       label = h3("California National Parks:"),
+                                       choices = list("Channel Islands National Park" = 1,
+                                                      "Death Valley National Park" = 2,
+                                                      "Joshua Tree National Park" = 3,
+                                                      "Lassen Volcanic National Park" = 4,
+                                                      "Pinnacles National Park" = 5,
+                                                      "Redwood National Park" = 6,
+                                                      "Sequoia and Kings Canyon National Parks" = 7,
+                                                      "Yosemite National Park" = 8), 
                                                   selected = 1),
                                      
                                      hr(),
@@ -27,7 +35,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                      ),
                         mainPanel(
                           tabsetPanel(type = "tab",
-                                      tabPanel("Park Map",  imageOutput("Image")),
+                                      tabPanel("Park Map",  uiOutput("Image")),
                                       tabPanel("Summary", verbatimTextOutput("summary")))
                         )
                       )
@@ -85,29 +93,31 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
 server <- function(input, output) {
   
   # Widget 1
+  
+  
   output$Image <- renderUI({
-    if(input$park_name == "Channel Islands National Park"){
+    if(input$park_selected == 1 ){
       img(height = 240, width = 300, src = "channel_islands_map.jpg")
     }
-    else if(input$park_name == "Death Valley National Park"){
+    else if(input$park_selected == 2 ){
       img(height = 240, width = 300, src = "death_valley_map.jpg")
     }
-    else if(input$park_name == "Joshua Tree National Park"){
+    else if(input$park_selected == 3 ){
       img(height = 240, width = 300, src = "joshua_tree_map.jpg")
     }
-    else if(input$park_name == "Lassen Volcanic National Park"){
+    else if(input$park_selected == 4){
       img(height = 240, width = 300, src = "lassen_volcanic_map.jpg")
     }
-    else if(input$park_name == "Pinnacles National Park"){
+    else if(input$park_selected == 5){
       img(height = 240, width = 300, src = "pinnacles_map.jpg")
     }
-    else if(input$park_name == "Redwood National Park"){
+    else if(input$park_selected == 6){
       img(height = 240, width = 300, src = "redwood_map.jpg")
     }
-    else if(input$park_name == "Sequoia and Kings Canyon National Parks"){
+    else if(input$park_selected == 7){
       img(height = 240, width = 300, src = "sequoia_map.jpg")
     }
-    else if(input$park_name == "Yosemite National Park"){
+    else if(input$park_selected == 8){
       img(height = 240, width = 300, src = "yosemite_map.jpg")
     }
   })
