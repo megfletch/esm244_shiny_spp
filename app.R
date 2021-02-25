@@ -8,7 +8,18 @@ library(janitor)
 library(sf)
 library(tmap)
 
-####### reading in the initial data
+
+####### Read in data for widget 1:
+park_boundaries <- 
+  sf::read_sf(
+    here("data", 
+         "ne_10m_parks_and_protected_lands" ,
+         "ne_10m_parks_and_protected_lands_area.shp")
+  ) %>% 
+  clean_names()
+####### End of data for widget 1
+
+####### Widget 3 data
 parks_data <- read_csv(here("data", "parks.csv")) %>% 
   clean_names() %>% 
   filter(state %in% c("CA", "CA, NV"))
@@ -22,17 +33,7 @@ species_data <- read_csv(here("data", "species.csv")) %>%
 species_category_all <- species_data %>% 
   group_by(park_name, category) %>% 
   count()
-####### End of initial data read in
-
-####### Read in data for widget 1:
-park_boundaries <- 
-  sf::read_sf(
-    here("data", 
-         "ne_10m_parks_and_protected_lands" ,
-         "ne_10m_parks_and_protected_lands_area.shp")
-  ) %>% 
-  clean_names()
-####### End of data for widget 1
+####### End of widget 3 data
 
 
 ui <- fluidPage(theme = shinytheme("cerulean"),
