@@ -80,8 +80,27 @@ ggplot(data = species_category, aes(x = park_name, y = n, fill = category)) +
 
 
 
+## Trying to combine 3 datasets into one
 
+```{r}
+#selecting only necessary values for species data
+species_data_v2 <- read_csv(here("data", "species.csv")) %>% 
+  clean_names() %>%
+  filter(occurrence == "Present") %>% 
+  select(park_name, common_names, category)
 
+#renaming park_code to unit_code in order to match the park boundaries dataset
+park_data_v2 <- read_csv(here("data", "parks.csv"))%>% 
+  clean_names() %>% 
+  rename(unit_code = park_code)
+
+#combining park data  with park boundary data
+park_data_bound <- merge(park_data_v2, park_boundaries, by = "unit_code")
+
+#combining the above combined dataset with the species data set by the name of the park
+species_park_bound <- merge(park_data_bound, species_data_v2, by = "park_name")
+
+```
 
 
 
