@@ -126,7 +126,6 @@ server <- function(input, output) {
   
   # Widget 3 - Species Categories
   category_reactive <- reactive({
-    
     species_category_all %>% 
       filter(category == input$species_category)
     
