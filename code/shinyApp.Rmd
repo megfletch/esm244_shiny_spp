@@ -90,7 +90,7 @@ tm_shape(park_boundaries) +
 
 fox_select <- species_park_bound %>% 
   filter(str_detect(common_names, pattern ="fox")) %>% #fox will be the inputId
-  select(common_names, park_name, name, geometry)
+  select(common_names, name, geometry)
 
 #trying to get only the parks that show up in the fox data frame to come up in the map
 
