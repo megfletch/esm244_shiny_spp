@@ -40,16 +40,16 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                         )
                       )
                       ),
-             tabPanel("Park Locations",
+             tabPanel("Species Locator",
                       sidebarLayout(
-                        sidebarPanel("widget2",
-                                     fileInput("View Park", label = h3("File input")),
-                                     
-                                     hr(),
-                                     fluidRow(column(4, verbatimTextOutput("value")))
-                                     ),
+                        sidebarPanel(
+                          textInput(inputId = "species_locator",
+                                    label = h3("Text input"),
+                                    value = "Enter species name..."),
+                          hr(),
+                          fluidRow(column(3, verbatimTextOutput("locator"))),
                         mainPanel(tabsetPanel(type = "tab",
-                                              tabPanel("Graph", plotOutput("plot")),
+                                              tabPanel("Graph", plotOutput("map")),
                                               tabPanel("Summary", verbatimTextOutput("summary"))))
                       )
                       ),
@@ -88,12 +88,11 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
     
   )
   
-)
+),
 
 server <- function(input, output) {
   
   # Widget 1
-  
   
   output$Image <- renderUI({
     if(input$park_selected == 1 ){
@@ -124,6 +123,12 @@ server <- function(input, output) {
   
   # Widget 2
   
+  species_name_reactive <- reactive({
+    species_data %>% 
+      filter(str_detect(common_names, pattern = input$species_locator))
+  })
+  
+  
   # Widget 3 - Species Categories
   category_reactive <- reactive({
     species_category_all %>% 
@@ -139,6 +144,7 @@ server <- function(input, output) {
   ) # widget 3 output parentheses
   
   # Widget 4
+  
 }
 
 shinyApp(ui = ui, server = server)

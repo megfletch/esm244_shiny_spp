@@ -36,38 +36,15 @@ species_category_all <- species_data %>%
       count()
 ```
 
+
 ```{r}
-# widget 1 - CA parks radio button -> map images and summary appear
+# widget 1 - radio button, pulls up maps of each park - the picture of the park (CA only) code is already done for this widget, it is just not working
 
 ```
 
 ```{r}
-# widget 2
-park_boundaries <- 
-  sf::read_sf(
-    here("data", 
-         "ne_10m_parks_and_protected_lands" ,
-         "ne_10m_parks_and_protected_lands_area.shp")
-  ) %>% 
-  clean_names()
+# widget 2 - Bar graph of species category - drop down menu widget
 
-region_select <- park_boundaries %>% 
-  filter(nps_region %in% c(input$selected_region))
-```
-
-
-```{r}
-tmap_mode("view")
-
-tm_shape(alaska) +
-  tm_polygons(aes(color = "lightgreen"))
-```
-
-
-
-
-```{r}
-# widget 3
 species_category <- species_data %>% 
   group_by(park_name, category) %>% 
   count()
@@ -76,8 +53,65 @@ species_category <- species_data %>%
 ggplot(data = species_category, aes(x = park_name, y = n, fill = category)) +
   geom_col() +
   facet_wrap(~category, scales = "free")
+
+
+
 ```
 
+
+```{r}
+# map code for widgets  3 and 4
+park_boundaries <- 
+  sf::read_sf(
+    here("data", 
+         "ne_10m_parks_and_protected_lands" ,
+         "ne_10m_parks_and_protected_lands_area.shp")
+  ) %>% 
+  clean_names()
+
+tmap_mode("view")
+
+tm_shape(park_boundaries) +
+  tm_polygons()
+```
+
+
+
+```{r}
+# widget 3 textbox widget - type in the animal to see which park it lives in.
+
+#reactive data frame 
+#species_name_reactive <- reactive({
+#    species_data %>% 
+#      filter(str_detect(common_names, pattern = input$species_locator))
+#  })
+
+#example code - need str_detect - using the combined data frame species_park_bound
+
+fox_select <- species_park_bound %>% 
+  filter(str_detect(common_names, pattern ="fox")) %>% #fox will be the inputId
+  select(common_names, park_name, name, geometry)
+
+#trying to get only the parks that show up in the fox data frame to come up in the map
+
+tm_shape(fox_select)
+```
+
+```{r}
+#widget 4 - interactive map of all national parks in the US (all 61) - checkbox
+
+# this will be the interactive data frame 
+#region_select <- reactive({park_boundaries %>% 
+#  filter(nps_region %in% c(input$selected_region))
+#)}
+```
+
+
+```{r}
+#widget 5 - possible biodiversity index widget
+
+
+```
 
 
 ## Trying to combine 3 datasets into one
@@ -87,18 +121,42 @@ ggplot(data = species_category, aes(x = park_name, y = n, fill = category)) +
 species_data_v2 <- read_csv(here("data", "species.csv")) %>% 
   clean_names() %>%
   filter(occurrence == "Present") %>% 
-  select(park_name, common_names, category)
+  select(park_name, common_names, category)%>% 
+   mutate(name = case_when(
+    park_name == "Sequoia and Kings Canyon National Parks" ~ "Sequoia",
+    park_name == "Channel Islands National Park" ~ "Channel Islands",
+    park_name == "Redwood National Park" ~ "Redwood",
+    park_name == "Death Valley National Park" ~ "Death Valley",
+    park_name == "Joshua Tree National Park" ~ "Joshua Tree",
+    park_name == "Lassen Volcanic National Park" ~ "Lassen Volcanic",
+    park_name == "Yosemite National Park" ~ "Yosement",
+    park_name == "Pinnacles National Park" ~ "Pinnacles"))%>% 
+  mutate(common_names = tolower(common_names))
+
 
 #renaming park_code to unit_code in order to match the park boundaries dataset
 park_data_v2 <- read_csv(here("data", "parks.csv"))%>% 
   clean_names() %>% 
-  rename(unit_code = park_code)
+  rename(unit_code = park_code) %>% 
+  filter(str_detect(state, pattern= "CA")) %>% 
+   mutate(name = case_when(
+    park_name == "Sequoia and Kings Canyon National Parks" ~ "Sequoia",
+    park_name == "Channel Islands National Park" ~ "Channel Islands",
+    park_name == "Redwood National Park" ~ "Redwood",
+    park_name == "Death Valley National Park" ~ "Death Valley",
+    park_name == "Joshua Tree National Park" ~ "Joshua Tree",
+    park_name == "Lassen Volcanic National Park" ~ "Lassen Volcanic",
+    park_name == "Yosemite National Park" ~ "Yosement",
+    park_name == "Pinnacles National Park" ~ "Pinnacles"))
 
-#combining park data  with park boundary data
-park_data_bound <- merge(park_data_v2, park_boundaries, by = "unit_code")
 
-#combining the above combined dataset with the species data set by the name of the park
-species_park_bound <- merge(park_data_bound, species_data_v2, by = "park_name")
+#combining park data  with park boundary data (contains all 7 NPs in CA)
+park_data_bound <- merge(park_data_v2, park_boundaries, by = "name")
+
+
+#combining the above combined dataset with the species data set by the name of the park (contains all 7 NPs in CA)
+species_park_bound <- merge(park_data_bound, species_data_v2, by = "name")
+
 
 ```
 
