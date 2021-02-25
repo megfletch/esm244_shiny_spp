@@ -27,7 +27,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                      ),
                         mainPanel(
                           tabsetPanel(type = "tab",
-                                      tabPanel("Park Map",  imageOutput("Image")),
+                                      tabPanel("Park Map",  uiOutput("Image")),
                                       tabPanel("Summary", verbatimTextOutput("summary")))
                         )
                       )

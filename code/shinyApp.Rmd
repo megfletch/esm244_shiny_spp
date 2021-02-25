@@ -13,6 +13,9 @@ library(here)
 library(janitor)
 library(sf)
 library(tmap)
+library(sp)
+library(rnaturalearthdata)
+library(rgeos)
 ```
 
 
@@ -25,7 +28,8 @@ parks_data <- read_csv(here("data", "parks.csv")) %>%
 
 species_data <- read_csv(here("data", "species.csv")) %>% 
   clean_names() %>% 
-  filter(park_name %in% c("Channel Islands National Park", "Death Valley National Park", "Joshua Tree National Park", "Lassen Volcanic National Park", "Pinnacles National Park", "Redwood National Park", "Sequoia and Kings National Park", "Yosemite National Park"))
+  filter(park_name %in% c("Channel Islands National Park", "Death Valley National Park", "Joshua Tree National Park", "Lassen Volcanic National Park", "Pinnacles National Park", "Redwood National Park", "Sequoia and Kings National Park", "Yosemite National Park")) %>% 
+  mutate(common_names = tolower(common_names))
 
 species_category_all <- species_data %>% 
       group_by(park_name, category) %>% 
@@ -42,19 +46,21 @@ species_category_all <- species_data %>%
 park_boundaries <- 
   sf::read_sf(
     here("data", 
-         "ParkBoundaries" ,
-         "ParkBoundaries.shp")
+         "ne_10m_parks_and_protected_lands" ,
+         "ne_10m_parks_and_protected_lands_area.shp")
   ) %>% 
-  clean_names() %>% 
-  dplyr::select(geometry)
+  clean_names()
 
-plot(park_boundaries)
+region_select <- park_boundaries %>% 
+  filter(nps_region %in% c(input$selected_region))
 ```
+
+
 ```{r}
 tmap_mode("view")
 
-tm_shape(park_boundaries) +
-  tm_polygons()
+tm_shape(alaska) +
+  tm_polygons(aes(color = "lightgreen"))
 ```
 
 
