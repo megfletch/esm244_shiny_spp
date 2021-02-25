@@ -52,7 +52,8 @@ species_category <- species_data %>%
 
 ggplot(data = species_category, aes(x = park_name, y = n, fill = category)) +
   geom_col() +
-  facet_wrap(~category, scales = "free")
+  facet_wrap(~category, scales = "free") +
+  
 
 
 

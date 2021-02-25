@@ -37,16 +37,15 @@ species_category_all <- species_data %>%
 
 
 ui <- fluidPage(theme = shinytheme("cerulean"),
-                titlePanel("California National Park App"),
-                sidebarLayout(
-                  sidebarPanel("Home Page"),
-                  mainPanel(
-                    p("This application can be used to access information regarding California's National Parks. Each tab provides different information including general park information, park locations, animal species within each park, and the park biological diversity index. It is our hope that this app can be used by a wide variety of inviduals and corporations. From people within the general public looking to plan a fun weekend excursion to kids working on schools research projects to organizations needing information on nearby parks, we believe this app has a little something for everyone."),
-                    p("The California National Park App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis graduate course. Progress of this app was overseen by Dr. Allison Horst. All data used in the development of this app was from The National Parks Service.")
-                  )
-                ),
+                titlePanel("California National Park Biological Diversity App"),
   
   navbarPage("California National Park Biological Diversity App",
+             tabPanel("Home"),
+               mainPanel(
+                 p("This application can be used to access information regarding California's National Parks. Each tab provides different information including general park information, park locations, animal species within each park, and the park biological diversity index. It is our hope that this app can be used by a wide variety of inviduals and corporations. From people within the general public looking to plan a fun weekend excursion to kids working on schools research projects to organizations needing information on nearby parks, we believe this app has a little something for everyone."),
+                 p("The California National Park App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis graduate course. Progress of this app was overseen by Dr. Allison Horst. All data used in the development of this app was from The National Parks Service.")
+               ),
+             
              tabPanel("Map View of National Parks",
                       sidebarLayout(
                         sidebarPanel(
@@ -116,8 +115,8 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
 #                      )
 #                      )
 #             
-#    
-# 
+    
+ 
              )  
 )
 
