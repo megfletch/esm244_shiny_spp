@@ -7,9 +7,12 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 library(tidyverse)
 library(here)
 library(janitor)
+library(sf)
+library(tmap)
 ```
 
 
@@ -36,7 +39,26 @@ species_category_all <- species_data %>%
 
 ```{r}
 # widget 2
+park_boundaries <- 
+  sf::read_sf(
+    here("data", 
+         "ParkBoundaries" ,
+         "ParkBoundaries.shp")
+  ) %>% 
+  clean_names() %>% 
+  dplyr::select(geometry)
+
+plot(park_boundaries)
 ```
+```{r}
+tmap_mode("view")
+
+tm_shape(park_boundaries) +
+  tm_polygons()
+```
+
+
+
 
 ```{r}
 # widget 3
