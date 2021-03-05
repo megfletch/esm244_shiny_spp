@@ -8,7 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(tidyverse)
+
 library(here)
 library(janitor)
 library(sf)
@@ -16,17 +16,22 @@ library(tmap)
 library(sp)
 library(rnaturalearthdata)
 library(rgeos)
+library(tidyverse)
 ```
 
 
 ```{r}
 # reading in the data
-parks_data <- read_csv(here("data", "parks.csv")) %>% 
+parks_data <- read_csv(here("data", "parks.csv")) 
+
+parks_data_ca <- parks_data%>% 
   clean_names() %>% 
   filter(state %in% c("CA", "CA, NV"))
 
 
-species_data <- read_csv(here("data", "species.csv")) %>% 
+species_data <- read_csv(here("data", "species.csv")) 
+
+species_data_ca <- species_data %>% 
   clean_names() %>% 
   filter(park_name %in% c("Channel Islands National Park", "Death Valley National Park", "Joshua Tree National Park", "Lassen Volcanic National Park", "Pinnacles National Park", "Redwood National Park", "Sequoia and Kings National Park", "Yosemite National Park")) %>% 
   mutate(common_names = tolower(common_names))
@@ -52,10 +57,8 @@ species_category <- species_data %>%
 
 ggplot(data = species_category, aes(x = park_name, y = n, fill = category)) +
   geom_col() +
-  facet_wrap(~category, scales = "free") +
+  facet_wrap(~category, scales = "free") 
   
-
-
 
 ```
 
@@ -122,7 +125,14 @@ tm_shape(fox_select)
 species_data_v2 <- read_csv(here("data", "species.csv")) %>% 
   clean_names() %>%
   filter(occurrence == "Present") %>% 
-  select(park_name, common_names, category)%>% 
+  filter(park_name %in% c("Sequoia and Kings Canyon National Parks",
+                          "Channel Islands National Park",
+                          "Redwood National Park",
+                          "Death Valley National Park",
+                          "Joshua Tree National Park",
+                         "Lassen Volcanic National Park",
+                         "Yosemite National Park",
+                         "Pinnacles National Park")) %>% 
    mutate(name = case_when(
     park_name == "Sequoia and Kings Canyon National Parks" ~ "Sequoia",
     park_name == "Channel Islands National Park" ~ "Channel Islands",
@@ -130,9 +140,9 @@ species_data_v2 <- read_csv(here("data", "species.csv")) %>%
     park_name == "Death Valley National Park" ~ "Death Valley",
     park_name == "Joshua Tree National Park" ~ "Joshua Tree",
     park_name == "Lassen Volcanic National Park" ~ "Lassen Volcanic",
-    park_name == "Yosemite National Park" ~ "Yosement",
+    park_name == "Yosemite National Park" ~ "Yosemite",
     park_name == "Pinnacles National Park" ~ "Pinnacles"))%>% 
-  mutate(common_names = tolower(common_names))
+  mutate(common_names = tolower(common_names))# so when user types in animal name in lower case it will detect it
 
 
 #renaming park_code to unit_code in order to match the park boundaries dataset
@@ -163,3 +173,22 @@ species_park_bound <- merge(park_data_bound, species_data_v2, by = "name")
 
 
 
+### trying to run species locator a an SF
+```{r}
+us_states <- read_sf(here("data", "us_states","States_shapefile.shp"))
+
+main_land <-us_states %>% 
+  filter(State_Code != "AK") %>% 
+  filter(State_Name != "HAWAII")
+  
+main_park_bound <- park_boundaries %>% 
+  filter(nps_region != "Alaska") %>% 
+  filter(unit_code != "HAVO")
+  
+ggplot()+
+  geom_sf(data = main_land)+
+  geom_sf(data = main_park_bound)+ # need this data frame to have species in it.
+  theme_minimal()
+```
+
+US_Shapefile link: https://hub.arcgis.com/datasets/1b02c87f62d24508970dc1a6df80c98e_0/data

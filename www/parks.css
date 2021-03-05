@@ -5,8 +5,16 @@
 /*Changes background color */
 
 body{
-  background-color: lightblue;
+  background-color: wheat;
   font-family: "Poppins";
+  color: skyblue;
+}
+
+h2{
+  background-color: lightgreen;
   color: red;
 }
 
+h3{
+  background-color: green;
+}

@@ -19,6 +19,59 @@ park_boundaries <-
   clean_names()
 ####### End of data for widget 1
 
+###### Widget 2 Data
+#selecting only necessary values for species data
+species_data_v2 <- read_csv(here("data", "species.csv")) %>% 
+  clean_names() %>%
+  filter(occurrence == "Present") %>% 
+  filter(park_name %in% c("Sequoia and Kings Canyon National Parks",
+                          "Channel Islands National Park",
+                          "Redwood National Park",
+                          "Death Valley National Park",
+                          "Joshua Tree National Park",
+                          "Lassen Volcanic National Park",
+                          "Yosemite National Park",
+                          "Pinnacles National Park")) %>% 
+  mutate(name = case_when(
+    park_name == "Sequoia and Kings Canyon National Parks" ~ "Sequoia",
+    park_name == "Channel Islands National Park" ~ "Channel Islands",
+    park_name == "Redwood National Park" ~ "Redwood",
+    park_name == "Death Valley National Park" ~ "Death Valley",
+    park_name == "Joshua Tree National Park" ~ "Joshua Tree",
+    park_name == "Lassen Volcanic National Park" ~ "Lassen Volcanic",
+    park_name == "Yosemite National Park" ~ "Yosemite",
+    park_name == "Pinnacles National Park" ~ "Pinnacles"))%>% 
+  mutate(common_names = tolower(common_names))# so when user types in animal name in lower case it will detect it
+
+
+#renaming park_code to unit_code in order to match the park boundaries dataset
+park_data_v2 <- read_csv(here("data", "parks.csv"))%>% 
+  clean_names() %>% 
+  rename(unit_code = park_code) %>% 
+  filter(str_detect(state, pattern= "CA")) %>% 
+  mutate(name = case_when(
+    park_name == "Sequoia and Kings Canyon National Parks" ~ "Sequoia",
+    park_name == "Channel Islands National Park" ~ "Channel Islands",
+    park_name == "Redwood National Park" ~ "Redwood",
+    park_name == "Death Valley National Park" ~ "Death Valley",
+    park_name == "Joshua Tree National Park" ~ "Joshua Tree",
+    park_name == "Lassen Volcanic National Park" ~ "Lassen Volcanic",
+    park_name == "Yosemite National Park" ~ "Yosement",
+    park_name == "Pinnacles National Park" ~ "Pinnacles"))
+
+
+#combining park data  with park boundary data (contains all 7 NPs in CA)
+park_data_bound <- merge(park_data_v2, park_boundaries, by = "name")
+
+
+#combining the above combined dataset with the species data set by the name of the park (contains all 7 NPs in CA)
+species_park_bound <- merge(park_data_bound, species_data_v2, by = "name")
+
+#map data
+ca_county_map <- read_sf(here("data", "ca_counties","CA_Counties_TIGER2016.shp"))
+
+###### END OF WIDGET 2 DATA
+
 ####### Widget 3 data
 parks_data <- read_csv(here("data", "parks.csv")) %>% 
   clean_names() %>% 
@@ -36,8 +89,8 @@ species_category_all <- species_data %>%
 ####### End of widget 3 data
 
 
-ui <- fluidPage(theme = shinytheme("cerulean"),
-                titlePanel("California National Park Biological Diversity App"),
+ui <- fluidPage(theme = "parks.css",
+                titlePanel("National Park Biological Diversity App"),
   
   navbarPage("California National Park Biological Diversity App",
              tabPanel("Home"),
@@ -55,7 +108,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                   selected = "Pacific West"),
                                      
                                      hr(),
-                                     fluidRow(column(3, verbatimTextOutput("value")))
+                                     fluidRow(column(5, verbatimTextOutput("value")))
                                      ),
                         mainPanel(
                           tabsetPanel(type = "tab",
@@ -64,20 +117,17 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                         )
                       )
                       ),
-#             tabPanel("Species Locator",
-#                      sidebarLayout(
-#                        sidebarPanel(
-#                          textInput(inputId = "species_locator",
-#                                    label = h3("Text input"),
-#                                    value = "Enter species name..."),
-#                          hr(),
-#                          fluidRow(column(3, verbatimTextOutput("locator")))
-#                        ),
-#                        mainPanel(tabsetPanel(type = "tab",
-#                                              tabPanel("Graph", plotOutput("map")),
-#                                              tabPanel("Summary", verbatimTextOutput("summary"))))
-#                      )
-#                      ),
+            tabPanel("Species Locator",
+                      sidebarLayout(
+                        sidebarPanel(
+                          textInput(inputId = "species_locator",
+                                    label = h3("Species Locator"),
+                                   value = "lion"),
+                          hr(),
+                        ),
+                        mainPanel(plotOutput("species_locator_plot"))
+                      )
+                      ),
              tabPanel("Park Species Categories",
                       sidebarLayout(
                         sidebarPanel(selectInput(inputId = "species_category",
@@ -88,33 +138,30 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                      ),
                         mainPanel(plotOutput("category_plot"))
                       )
+                      ),
+            tabPanel("CA Park Images",
+                      sidebarLayout(
+                        sidebarPanel(
+                          radioButtons(inputId = "park_selected", 
+                                       label = h3("California National Parks:"),
+                                       choices = list("Channel Islands National Park" = 1,
+                                                      "Death Valley National Park" = 2,
+                                                      "Joshua Tree National Park" = 3,
+                                                      "Lassen Volcanic National Park" = 4,
+                                                      "Pinnacles National Park" = 5,
+                                                      "Redwood National Park" = 6,
+                                                      "Sequoia and Kings Canyon National Parks" = 7,
+                                                      "Yosemite National Park" = 8), 
+                                       selected = 1),
+                          
+                          hr(),
+                        ),
+                        mainPanel(
+                          tabsetPanel( uiOutput("Image"))
+                        )
+                     )
                       )
-#             tabPanel("CA Park Images",
-#                      sidebarLayout(
-#                        sidebarPanel(
-#                          radioButtons(inputId = "park_selected", 
-#                                       label = h3("California National Parks:"),
-#                                       choices = list("Channel Islands National Park" = 1,
-#                                                      "Death Valley National Park" = 2,
-#                                                      "Joshua Tree National Park" = 3,
-#                                                      "Lassen Volcanic National Park" = 4,
-#                                                      "Pinnacles National Park" = 5,
-#                                                      "Redwood National Park" = 6,
-#                                                      "Sequoia and Kings Canyon National Parks" = 7,
-#                                                      "Yosemite National Park" = 8), 
-#                                       selected = 1),
-#                          
-#                          hr(),
-#                          fluidRow(column(3, verbatimTextOutput("value")))
-#                        ),
-#                        mainPanel(
-#                          tabsetPanel(type = "tab",
-#                                      tabPanel("Park Map",  uiOutput("Image")),
-#                                      tabPanel("Summary", verbatimTextOutput("summary")))
-#                        )
-#                      )
-#                      )
-#             
+             
     
  
              )  
@@ -139,10 +186,15 @@ server <- function(input, output) {
   
   # Widget 2
   
-  species_name_reactive <- reactive({
-    species_data %>% 
-      filter(str_detect(common_names, pattern = input$species_locator))
-  })
+species_reactive <- reactive({
+  species_park_bound %>% 
+    filter(str_detect(common_names, pattern = input$species_locator))
+})
+
+output$species_locator_plot <- renderPlot(
+  ggplot(data = ca_county_map) + geom_sf()+
+    geom_sf(data = species_reactive(), aes(fill = "blue"))
+)
   
   
   # Widget 3 - Species Categories
