@@ -90,14 +90,14 @@ species_category_all <- species_data %>%
 
 
 ui <- fluidPage(theme = "parks.css",
-                titlePanel("National Park Biological Diversity App"),
   
-  navbarPage("California National Park Biological Diversity App",
-             tabPanel("Home"),
-               mainPanel(
-                 p("This application can be used to access information regarding California's National Parks. Each tab provides different information including general park information, park locations, animal species within each park, and the park biological diversity index. It is our hope that this app can be used by a wide variety of inviduals and corporations. From people within the general public looking to plan a fun weekend excursion to kids working on schools research projects to organizations needing information on nearby parks, we believe this app has a little something for everyone."),
-                 p("The California National Park App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis graduate course. Progress of this app was overseen by Dr. Allison Horst. All data used in the development of this app was from The National Parks Service.")
+  navbarPage(title = "California National Parks Informational App",
+             tabPanel("Home",
+                img(src = "yosemite_home.jpg", height = 200, width = 850),
+                 h4("This application can be used to access information regarding California's National Parks. Each tab provides different information including general park information, park locations, animal species within each park, and the park biological diversity index. It is our hope that this app can be used by a wide variety of inviduals and corporations. From people within the general public looking to plan a fun weekend excursion to kids working on schools research projects to organizations needing information on nearby parks, we believe this app has a little something for everyone."),
+                 h4("The California National Park App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis graduate course. Progress of this app was overseen by Dr. Allison Horst. All data used in the development of this app was from The National Parks Service.")
                ),
+                 
              
              tabPanel("Map View of National Parks",
                       sidebarLayout(
@@ -144,20 +144,20 @@ ui <- fluidPage(theme = "parks.css",
                         sidebarPanel(
                           radioButtons(inputId = "park_selected", 
                                        label = h3("California National Parks:"),
-                                       choices = list("Channel Islands National Park" = 1,
-                                                      "Death Valley National Park" = 2,
-                                                      "Joshua Tree National Park" = 3,
-                                                      "Lassen Volcanic National Park" = 4,
-                                                      "Pinnacles National Park" = 5,
-                                                      "Redwood National Park" = 6,
-                                                      "Sequoia and Kings Canyon National Parks" = 7,
-                                                      "Yosemite National Park" = 8), 
-                                       selected = 1),
+                                       choices = list("Channel Islands National Park",
+                                                      "Death Valley National Park",
+                                                      "Joshua Tree National Park",
+                                                      "Lassen Volcanic National Park",
+                                                      "Pinnacles National Park",
+                                                      "Redwood National Park",
+                                                      "Sequoia and Kings Canyon National Parks",
+                                                      "Yosemite National Park"), 
+                                       selected = "Channel Islands National Park"),
                           
                           hr(),
                         ),
                         mainPanel(
-                          tabsetPanel( uiOutput("Image"))
+                          (uiOutput("image"))
                         )
                      )
                       )
@@ -217,30 +217,30 @@ output$species_locator_plot <- renderPlot(
   
   # Widget 4
   
-  output$Image <- renderUI({
-    if(input$park_selected == 1 ){
-      img(height = 240, width = 300, src = "channel_islands_map.jpg")
+  output$image <- renderUI({
+    if(input$park_selected == "Channel Islands National Park"){
+      img(height = 600, width = 570, src = "images/channel_islands_map.jpg")
     }
-    else if(input$park_selected == 2 ){
-      img(height = 240, width = 300, src = "death_valley_map.jpg")
+    else if(input$park_selected == "Death Valley National Park"){
+      img(src = "images/death_valley_map.jpg")
     }
-    else if(input$park_selected == 3 ){
-      img(height = 240, width = 300, src = "joshua_tree_map.jpg")
+    else if(input$park_selected == "Joshua Tree National Park"){
+      img(src = "images/joshua_tree_map.jpg")
     }
-    else if(input$park_selected == 4){
-      img(height = 240, width = 300, src = "lassen_volcanic_map.jpg")
+    else if(input$park_selected == "Lassen Volcanic National Park"){
+      img(src = "images/lassen_volcanic_map.jpg")
     }
-    else if(input$park_selected == 5){
-      img(height = 240, width = 300, src = "pinnacles_map.jpg")
+    else if(input$park_selected == "Pinnacles National Park"){
+      img(src = "images/pinnacles_map.jpg")
     }
-    else if(input$park_selected == 6){
-      img(height = 240, width = 300, src = "redwood_map.jpg")
+    else if(input$park_selected == "Redwood National Park"){
+      img(src = "images/redwood_map.jpg")
     }
-    else if(input$park_selected == 7){
-      img(height = 240, width = 300, src = "sequoia_map.jpg")
+    else if(input$park_selected == "Sequoia and Kings Canyon National Parks"){
+      img(src = "images/sequoia_map.jpg")
     }
-    else if(input$park_selected == 8){
-      img(height = 240, width = 300, src = "yosemite_map.jpg")
+    else if(input$park_selected == "Yosemite National Parks"){
+      img(src = "images/yosemite_map.jpg")
     }
     
   })
