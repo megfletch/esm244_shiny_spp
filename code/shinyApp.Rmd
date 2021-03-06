@@ -66,7 +66,7 @@ ggplot(data = species_category, aes(x = park_name, y = n, fill = category)) +
 ```{r}
 # map code for widgets  3 and 4
 park_boundaries <- 
-  sf::read_sf(
+  st_read(
     here("data", 
          "ne_10m_parks_and_protected_lands" ,
          "ne_10m_parks_and_protected_lands_area.shp")
@@ -75,8 +75,11 @@ park_boundaries <-
 
 tmap_mode("view")
 
+map_1<- tm_basemap("Esri.WorldTopoMap")+
 tm_shape(park_boundaries) +
   tm_polygons()
+
+map_1
 ```
 
 
@@ -162,20 +165,23 @@ park_data_v2 <- read_csv(here("data", "parks.csv"))%>%
 
 
 #combining park data  with park boundary data (contains all 7 NPs in CA)
-park_data_bound <- merge(park_data_v2, park_boundaries, by = "name")
+park_data_bound <- merge(park_boundaries, park_data_v2, by = "name")
 
 
 #combining the above combined dataset with the species data set by the name of the park (contains all 7 NPs in CA)
 species_park_bound <- merge(park_data_bound, species_data_v2, by = "name")
 
+st_crs(species_park_bound)
 
+tm_shape(species_park_bound)+
+  tm_polygons(aes(color = "blue"))
 ```
 
 
 
 ### trying to run species locator a an SF
 ```{r}
-us_states <- read_sf(here("data", "us_states","States_shapefile.shp"))
+us_states <- st_read(here("data", "us_states","States_shapefile.shp"))
 
 main_land <-us_states %>% 
   filter(State_Code != "AK") %>% 

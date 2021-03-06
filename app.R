@@ -11,7 +11,7 @@ library(tmap)
 
 ####### Read in data for widget 1:
 park_boundaries <- 
-  sf::read_sf(
+  st_read(
     here("data", 
          "ne_10m_parks_and_protected_lands" ,
          "ne_10m_parks_and_protected_lands_area.shp")
@@ -61,14 +61,14 @@ park_data_v2 <- read_csv(here("data", "parks.csv"))%>%
 
 
 #combining park data  with park boundary data (contains all 7 NPs in CA)
-park_data_bound <- merge(park_data_v2, park_boundaries, by = "name")
+park_data_bound <- merge(park_boundaries, park_data_v2, by = "name")
 
 
 #combining the above combined dataset with the species data set by the name of the park (contains all 7 NPs in CA)
 species_park_bound <- merge(park_data_bound, species_data_v2, by = "name")
 
 #map data
-ca_county_map <- read_sf(here("data", "ca_counties","CA_Counties_TIGER2016.shp"))
+ca_county_map <- st_read(here("data", "ca_counties","CA_Counties_TIGER2016.shp"))
 
 ###### END OF WIDGET 2 DATA
 
@@ -184,9 +184,9 @@ server <- function(input, output) {
   }) # Widget 1 reactive parentheses
   
   output$region_plot <- renderTmap(
-
+    tm_basemap("Esri.WorldTopoMap")+
     tm_shape(region_reactive()) +
-      tm_polygons()
+      tm_polygons(fill = "nps_region")
     
   ) # widget 1 output parentheses
 
@@ -200,7 +200,7 @@ species_reactive <- reactive({
 
 output$species_locator_plot <- renderPlot(
   ggplot(data = ca_county_map) + geom_sf()+
-    geom_sf(data = species_reactive(), aes(fill = "blue"))
+    geom_sf(data = species_reactive(), fill = "blue")
 )
   
   
