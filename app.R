@@ -94,12 +94,19 @@ ui <- fluidPage(theme = "parks.css",
   navbarPage(title = "California National Parks Informational App",
              tabPanel("Home",
                 img(src = "yosemite_home.jpg", height = 200, width = 850),
-                 h4("This application can be used to access information regarding California's National Parks. Each tab provides different information including general park information, park locations, animal species within each park, and the park biological diversity index. It is our hope that this app can be used by a wide variety of inviduals and corporations. From people within the general public looking to plan a fun weekend excursion to kids working on schools research projects to organizations needing information on nearby parks, we believe this app has a little something for everyone."),
-                 h4("The California National Park App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis graduate course. Progress of this app was overseen by Dr. Allison Horst. All data used in the development of this app was from The National Parks Service.")
+                h1(strong("Welcome to the California National Parks Informational App")),
+                h4(strong("Created by: Danielle Sclafani & Meghan Fletcher")),
+                hr(),
+                h4("The intention of this application is to enable viewers to quickly find basic geographic and species information for California’s major national parks. Each tab provides different information including geographic information on all U.S. national parks, a CA species locator, differences between the species categories of each CA park and maps of the CA parks. It is our hope that this app can be used by a wide variety of individuals and corporations. From people within the general public looking to plan a fun weekend excursion to kids working on school research projects to organizations needing information on nearby parks, we believe this app has a little something for everyone."),
+                hr(),
+                h3(strong("Widget Information")),
+                h4("There are four interactive widgets in this app. Each widget is housed in a separate tab (see below)."),
+                h4(strong("Widget 1: U.S. National Parks Interactive Map")),
+                h4("This widget allows users to select one or more regions across the U.S. to see where the various national parks are using an interactive tmap.")
                ),
                  
              
-             tabPanel("Map View of National Parks",
+             tabPanel("U.S. National Parks Interactive Map",
                       sidebarLayout(
                         sidebarPanel(
                           checkboxGroupInput(inputId = "region_selected", 
@@ -222,25 +229,25 @@ output$species_locator_plot <- renderPlot(
       img(height = 600, width = 570, src = "images/channel_islands_map.jpg")
     }
     else if(input$park_selected == "Death Valley National Park"){
-      img(src = "images/death_valley_map.jpg")
+      img(height = 600, width = 570, src = "images/death_valley_map.jpg")
     }
     else if(input$park_selected == "Joshua Tree National Park"){
-      img(src = "images/joshua_tree_map.jpg")
+      img(height = 600, width = 570, src = "images/joshua_tree_map.jpg")
     }
     else if(input$park_selected == "Lassen Volcanic National Park"){
-      img(src = "images/lassen_volcanic_map.jpg")
+      img(height = 600, width = 570, src = "images/lassen_volcanic_map.jpg")
     }
     else if(input$park_selected == "Pinnacles National Park"){
-      img(src = "images/pinnacles_map.jpg")
+      img(height = 600, width = 570, src = "images/pinnacles_map.jpg")
     }
     else if(input$park_selected == "Redwood National Park"){
-      img(src = "images/redwood_map.jpg")
+      img(height = 600, width = 570, src = "images/redwood_map.jpg")
     }
     else if(input$park_selected == "Sequoia and Kings Canyon National Parks"){
-      img(src = "images/sequoia_map.jpg")
+      img(height = 600, width = 570, src = "images/sequoia_map.jpg")
     }
-    else if(input$park_selected == "Yosemite National Parks"){
-      img(src = "images/yosemite_map.jpg")
+    else if(input$park_selected == "Yosemite National Park"){
+      img(height = 600, width = 570, src = "images/yosemite_map.jpg")
     }
     
   })
