@@ -7,6 +7,7 @@ library(here)
 library(janitor)
 library(sf)
 library(tmap)
+library(viridis)
 
 
 ####### Read in data for widget 1:
@@ -102,7 +103,19 @@ ui <- fluidPage(theme = "parks.css",
                 h3(strong("Widget Information")),
                 h4("There are four interactive widgets in this app. Each widget is housed in a separate tab (see below)."),
                 h4(strong("Widget 1: U.S. National Parks Interactive Map")),
-                h4("This widget allows users to select one or more regions across the U.S. to see where the various national parks are using an interactive tmap.")
+                h4("This widget allows users to select one or more regions across the U.S. to see where the various national parks are using an interactive tmap. The map will automatically zoom to the region of interest."),
+                h4(strong("Widget 2: Species Locator")),
+                h4("This text widget allows users to type in the common name of a species they’re interested in to reveal which California parks contain that species. It is important to note that in order to have the desired species appear, one must input the common name in all lower-case letters. Additionally, it is important to be as specific. For instance, typing “deer” will generate a result that pulls up all deer species. To avoid this, be sure to be specific and type something like “mule deer” to get better results."),
+                h4(strong("Widget 3: Species Categories by Park")),
+                h4("Using this widget, users can view the differences in species categories between the California National Parks.  Users can utilize the drop-down menu to select which species category they’re interested in viewing and a bar graph containing the number of species in that category by park will appear."),
+                h4(strong("Widget 4: Park Maps")),
+                h4("By selecting one of the California National Parks on the left-hand side of the page, users can pull up a zoomable image of each of the California National Parks. These maps contain geographical information like where people can hike and camp and where visitor centers are located within the park."),
+                hr(),
+                h3(strong("Data & Source Information:")),
+                h4("The California National Parks Informational App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis (ESM 244) graduate course at the Bren School of Environmental Science & Management at the University of California, Santa Barbara. Progress of this app was overseen by Dr. Allison Horst and Casey O’Hara."),
+                h4("Species and California national park data were obtained from the National Park Service using Kaggle: https://www.kaggle.com/nationalparkservice/park-biodiversity?select=parks.csv"),
+                h4("Geometries for the National Parks of the U.S. came from rnaturalearth: https://www.naturalearthdata.com/downloads/10m-cultural-vectors/parks-and-protected-lands/"),
+                h4("CA park maps were also procured from the National Park Service website")
                ),
                  
              
@@ -135,7 +148,7 @@ ui <- fluidPage(theme = "parks.css",
                         mainPanel(plotOutput("species_locator_plot"))
                       )
                       ),
-             tabPanel("Park Species Categories",
+             tabPanel("Species Categories by Park",
                       sidebarLayout(
                         sidebarPanel(selectInput(inputId = "species_category",
                                                         label = "Select species category:",
@@ -164,7 +177,11 @@ ui <- fluidPage(theme = "parks.css",
                           hr(),
                         ),
                         mainPanel(
-                          (uiOutput("image"))
+                          uiOutput("image"),
+                          tags$style('div#image:hover {
+                 transform: scale(1.5);
+                 transform-origin: top left;
+                }')
                         )
                      )
                       )
@@ -186,7 +203,7 @@ server <- function(input, output) {
   output$region_plot <- renderTmap(
     tm_basemap("Esri.WorldTopoMap")+
     tm_shape(region_reactive()) +
-      tm_polygons(fill = "nps_region")
+      tm_polygons(fill = "nps_region", alpha = 0.3)
     
   ) # widget 1 output parentheses
 
@@ -218,7 +235,11 @@ output$species_locator_plot <- renderPlot(
       coord_flip() +
       theme_bw() +
       theme(legend.position = "none") +
-      labs(x = "", y = "Number of Species")
+      labs(x = "", y = "Number of Species") +
+      scale_color_viridis(discrete = TRUE)+
+      scale_fill_viridis(discrete = TRUE) +
+      geom_text(aes(label=n, hjust= -0.5, size = 3))
+      
     
   ) # widget 3 output parentheses
   
@@ -226,28 +247,28 @@ output$species_locator_plot <- renderPlot(
   
   output$image <- renderUI({
     if(input$park_selected == "Channel Islands National Park"){
-      img(height = 600, width = 570, src = "images/channel_islands_map.jpg")
+      tags$img(height = 600, width = 570, src = "images/channel_islands_map.jpg")
     }
     else if(input$park_selected == "Death Valley National Park"){
-      img(height = 600, width = 570, src = "images/death_valley_map.jpg")
+      tags$img(height = 600, width = 570, src = "images/death_valley_map.jpg")
     }
     else if(input$park_selected == "Joshua Tree National Park"){
-      img(height = 600, width = 570, src = "images/joshua_tree_map.jpg")
+      tags$img(height = 400, width = 570, src = "images/joshua_tree_map.jpg")
     }
     else if(input$park_selected == "Lassen Volcanic National Park"){
-      img(height = 600, width = 570, src = "images/lassen_volcanic_map.jpg")
+      tags$img(height = 600, width = 570, src = "images/lassen_volcanic_map.jpg")
     }
     else if(input$park_selected == "Pinnacles National Park"){
-      img(height = 600, width = 570, src = "images/pinnacles_map.jpg")
+      tags$img(height = 600, width = 570, src = "images/pinnacles_map.jpg")
     }
     else if(input$park_selected == "Redwood National Park"){
-      img(height = 600, width = 570, src = "images/redwood_map.jpg")
+      tags$img(height = 600, width = 570, src = "images/redwood_map.jpg")
     }
     else if(input$park_selected == "Sequoia and Kings Canyon National Parks"){
-      img(height = 600, width = 570, src = "images/sequoia_map.jpg")
+      tags$img(height = 600, width = 570, src = "images/sequoia_map.jpg")
     }
     else if(input$park_selected == "Yosemite National Park"){
-      img(height = 600, width = 570, src = "images/yosemite_map.jpg")
+      tags$img(height = 600, width = 570, src = "images/yosemite_map.jpg")
     }
     
   })

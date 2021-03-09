@@ -1,20 +1,7 @@
-/* MY THEME */
+/* Our theme */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
-
-/*Changes background color */
-
-body{
-  background-color: wheat;
-  font-family: "Poppins";
-  color: blue;
-}
-
-h2{
-  background-color: lightgreen;
-  color: red;
-}
-
-h3{
-  background-color: green;
+.main-header .logo {
+  font-family: "Georgia", Times, "Times New Roman", serif;
+  font-weight: bold;
+  font-size: 24px;
 }
