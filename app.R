@@ -8,6 +8,7 @@ library(janitor)
 library(sf)
 library(tmap)
 library(viridis)
+library(shinydashboard)
 
 
 ####### Read in data for widget 1:
@@ -90,36 +91,46 @@ species_category_all <- species_data %>%
 ####### End of widget 3 data
 
 
-ui <- fluidPage(theme = "parks.css",
-  
-  navbarPage(title = "California National Parks Informational App",
-             tabPanel("Home",
-                img(src = "yosemite_home.jpg", height = 200, width = 850),
-                h1(strong("Welcome to the California National Parks Informational App")),
-                h4(strong("Created by: Danielle Sclafani & Meghan Fletcher")),
-                hr(),
-                h4("The intention of this application is to enable viewers to quickly find basic geographic and species information for California’s major national parks. Each tab provides different information including geographic information on all U.S. national parks, a CA species locator, differences between the species categories of each CA park and maps of the CA parks. It is our hope that this app can be used by a wide variety of individuals and corporations. From people within the general public looking to plan a fun weekend excursion to kids working on school research projects to organizations needing information on nearby parks, we believe this app has a little something for everyone."),
-                hr(),
-                h3(strong("Widget Information")),
-                h4("There are four interactive widgets in this app. Each widget is housed in a separate tab (see below)."),
-                h4(strong("Widget 1: U.S. National Parks Interactive Map")),
-                h4("This widget allows users to select one or more regions across the U.S. to see where the various national parks are using an interactive tmap. The map will automatically zoom to the region of interest."),
-                h4(strong("Widget 2: Species Locator")),
-                h4("This text widget allows users to type in the common name of a species they’re interested in to reveal which California parks contain that species. It is important to note that in order to have the desired species appear, one must input the common name in all lower-case letters. Additionally, it is important to be as specific. For instance, typing “deer” will generate a result that pulls up all deer species. To avoid this, be sure to be specific and type something like “mule deer” to get better results."),
-                h4(strong("Widget 3: Species Categories by Park")),
-                h4("Using this widget, users can view the differences in species categories between the California National Parks.  Users can utilize the drop-down menu to select which species category they’re interested in viewing and a bar graph containing the number of species in that category by park will appear."),
-                h4(strong("Widget 4: Park Maps")),
-                h4("By selecting one of the California National Parks on the left-hand side of the page, users can pull up a zoomable image of each of the California National Parks. These maps contain geographical information like where people can hike and camp and where visitor centers are located within the park."),
-                hr(),
-                h3(strong("Data & Source Information:")),
-                h4("The California National Parks Informational App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis (ESM 244) graduate course at the Bren School of Environmental Science & Management at the University of California, Santa Barbara. Progress of this app was overseen by Dr. Allison Horst and Casey O’Hara."),
-                h4("Species and California national park data were obtained from the National Park Service using Kaggle: https://www.kaggle.com/nationalparkservice/park-biodiversity?select=parks.csv"),
-                h4("Geometries for the National Parks of the U.S. came from rnaturalearth: https://www.naturalearthdata.com/downloads/10m-cultural-vectors/parks-and-protected-lands/"),
-                h4("CA park maps were also procured from the National Park Service website")
-               ),
-                 
-             
-             tabPanel("U.S. National Parks Interactive Map",
+ui <- fluidPage(
+  dashboardPage(
+      dashboardHeader(title = "California National Parks Informational App"),
+      dashboardSidebar(
+        sidebarMenu(
+          menuItem("Home Page", tabName = "home", icon = icon("home")),
+          menuItem("Interactive Map", tabName = "map", icon = icon("globe", lib = "glyphicon")),
+          menuItem("Species Locator", tabName = "locator", icon = icon("eye-open", lib = "glyphicon")),
+          menuItem("Species by Park", tabName = "categories", icon = icon("stats", lib = "glyphicon")),
+          menuItem("Parks Pics",tabName = "images", icon = icon("picture", lib = "glyphicon"))
+        )
+      ),
+      dashboardBody(
+        tabItems(
+          tabItem(tabName = "home",
+                  img(src = "yosemite_home.jpg", height = 200, width = 850),
+                    h1(strong("Welcome to the California National Parks Informational App")),
+                    h4(strong("Created by: Danielle Sclafani & Meghan Fletcher")),
+                    hr(),
+                    h4("The intention of this application is to enable viewers to quickly find basic geographic and species information for California’s major national parks. Each tab provides different information including geographic information on all U.S. national parks, a CA species locator, differences between the species categories of each CA park and maps of the CA parks. It is our hope that this app can be used by a wide variety of individuals and corporations. From people within the general public looking to plan a fun weekend excursion to kids working on school research projects to organizations needing information on nearby parks, we believe this app has a little something for everyone."),
+                    hr(),
+                    h3(strong("Widget Information")),
+                    h4("There are four interactive widgets in this app. Each widget is housed in a separate tab (see below)."),
+                    h4(strong("Widget 1: U.S. National Parks Interactive Map")),
+                    h4("This widget allows users to select one or more regions across the U.S. to see where the various national parks are using an interactive tmap. The map will automatically zoom to the region of interest."),
+                    h4(strong("Widget 2: Species Locator")),
+                    h4("This text widget allows users to type in the common name of a species they’re interested in to reveal which California parks contain that species. It is important to note that in order to have the desired species appear, one must input the common name in all lower-case letters. Additionally, it is important to be as specific. For instance, typing “deer” will generate a result that pulls up all deer species. To avoid this, be sure to be specific and type something like “mule deer” to get better results."),
+                    h4(strong("Widget 3: Species Categories by Park")),
+                    h4("Using this widget, users can view the differences in species categories between the California National Parks.  Users can utilize the drop-down menu to select which species category they’re interested in viewing and a bar graph containing the number of species in that category by park will appear."),
+                    h4(strong("Widget 4: Park Maps")),
+                    h4("By selecting one of the California National Parks on the left-hand side of the page, users can pull up a zoomable image of each of the California National Parks. These maps contain geographical information like where people can hike and camp and where visitor centers are located within the park."),
+                    hr(),
+                    h3(strong("Data & Source Information:")),
+                    h4("The California National Parks Informational App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis (ESM 244) graduate course at the Bren School of Environmental Science & Management at the University of California, Santa Barbara. Progress of this app was overseen by Dr. Allison Horst and Casey O’Hara."),
+                    h4("Species and California national park data were obtained from the National Park Service using Kaggle: https://www.kaggle.com/nationalparkservice/park-biodiversity?select=parks.csv"),
+                    h4("Geometries for the National Parks of the U.S. came from rnaturalearth: https://www.naturalearthdata.com/downloads/10m-cultural-vectors/parks-and-protected-lands/"),
+                    h4("CA park maps were also procured from the National Park Service website")),
+          
+          tabItem(tabName = "map",
+          tabPanel("U.S. National Parks Interactive Map",
                       sidebarLayout(
                         sidebarPanel(
                           checkboxGroupInput(inputId = "region_selected", 
@@ -136,8 +147,9 @@ ui <- fluidPage(theme = "parks.css",
                                       tabPanel("Summary", verbatimTextOutput("summary")))
                         )
                       )
-                      ),
-            tabPanel("Species Locator",
+                      )),
+          tabItem(tabName = "locator",
+          tabPanel("Species Locator",
                       sidebarLayout(
                         sidebarPanel(
                           textInput(inputId = "species_locator",
@@ -147,8 +159,9 @@ ui <- fluidPage(theme = "parks.css",
                         ),
                         mainPanel(plotOutput("species_locator_plot"))
                       )
-                      ),
-             tabPanel("Species Categories by Park",
+                      )),
+          tabItem(tabName = "categories",
+          tabPanel("Species Categories by Park",
                       sidebarLayout(
                         sidebarPanel(selectInput(inputId = "species_category",
                                                         label = "Select species category:",
@@ -158,8 +171,9 @@ ui <- fluidPage(theme = "parks.css",
                                      ),
                         mainPanel(plotOutput("category_plot"))
                       )
-                      ),
-            tabPanel("CA Park Images",
+                      )),
+          tabItem(tabName = "images",
+          tabPanel("CA Park Images",
                       sidebarLayout(
                         sidebarPanel(
                           radioButtons(inputId = "park_selected", 
@@ -181,15 +195,12 @@ ui <- fluidPage(theme = "parks.css",
                           tags$style('div#image:hover {
                  transform: scale(1.5);
                  transform-origin: top left;
-                }')
-                        )
-                     )
-                      )
-             
-    
- 
+                }'))
+                     ))
              )  
-)
+))
+))
+
 
 server <- function(input, output) {
   
