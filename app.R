@@ -145,7 +145,7 @@ species_category_all <- species_data %>%
 
 ui <- fluidPage(
   dashboardPage(
-      dashboardHeader(title = "California National Parks Informational App"),
+      dashboardHeader(title = "CA Parks App"),
       dashboardSidebar(
         sidebarMenu(
           menuItem("Home Page", tabName = "home", icon = icon("home")),
@@ -158,7 +158,7 @@ ui <- fluidPage(
       dashboardBody(
         tabItems(
           tabItem(tabName = "home",
-                  img(src = "yosemite_home.jpg", height = 200, width = 850),
+                  img(src = "yosemite_home.jpg", height = 260, width = 1370),
                     h1(strong("Welcome to the California National Parks Informational App")),
                     h4(strong("Created by: Danielle Sclafani & Meghan Fletcher")),
                     hr(),
@@ -177,9 +177,9 @@ ui <- fluidPage(
                     hr(),
                     h3(strong("Data & Source Information:")),
                     h4("The California National Parks Informational App was created and produced by Danielle Sclafani and Meghan Fletcher as part of their Advanced Data Analysis (ESM 244) graduate course at the Bren School of Environmental Science & Management at the University of California, Santa Barbara. Progress of this app was overseen by Dr. Allison Horst and Casey O’Hara."),
-                    h4("Species and California national park data were obtained from the National Park Service using Kaggle: https://www.kaggle.com/nationalparkservice/park-biodiversity?select=parks.csv"),
-                    h4("Geometries for the National Parks of the U.S. came from rnaturalearth: https://www.naturalearthdata.com/downloads/10m-cultural-vectors/parks-and-protected-lands/"),
-                    h4("CA park maps were also procured from the National Park Service website")),
+                    h4("Species and California national park data were obtained from the National Park Service using", tags$a(href="https://www.kaggle.com/nationalparkservice/park-biodiversity?select=parks.csv", "Kaggle")),
+                    h4("Geometries for the National Parks of the U.S. came from", tags$a(href="https://www.naturalearthdata.com/downloads/10m-cultural-vectors/parks-and-protected-lands/", "rnaturalearth")),
+                    h4("CA park maps were also procured from the", tags$a(href="https://www.nps.gov/carto/app/#!/parks/state/ca", "National Park Service website"))),
           
           tabItem(tabName = "map",
           tabPanel("U.S. National Parks Interactive Map",
@@ -191,12 +191,12 @@ ui <- fluidPage(
                                                   selected = "Pacific West"),
                                      
                                      hr(),
+                          helpText("Select the region of interest to view where the national parks are located within those regions. Users can select more than one region and use the map to zoom in and out of specific locations."),
                                      fluidRow(column(5, verbatimTextOutput("value")))
                                      ),
                         mainPanel(
                           tabsetPanel(type = "tab",
-                                      tabPanel("Map of Parks",  tmapOutput("region_plot")),
-                                      tabPanel("Summary", verbatimTextOutput("summary")))
+                                      tabPanel("Map of Parks",  tmapOutput("region_plot")))
                         )
                       )
                       )),
@@ -213,7 +213,9 @@ ui <- fluidPage(
                                              selected = "CA"),
                           hr(),
                         ),
-                        mainPanel(tmapOutput("species_locator_plot"))
+                        mainPanel(tmapOutput("species_locator_plot"),
+                                  h4("Enter the common name of the species you are interested in. Then select a state of interest."),
+                                  h4("Please note that common names must be entered in all lowercase letters and a state must be selected at all times for the app to function properly. Additionally, be specific in entering common names for better results."))
                       )
                       )),
           tabItem(tabName = "categories",
@@ -223,7 +225,7 @@ ui <- fluidPage(
                                                         label = "Select species category:",
                                                         choices = unique(species_data$category)),
                                      hr(),
-                                     helpText("Data from the National Park Service")
+                                     helpText("By selecting a species category from the top-down menu, users can view the differences in the number of each species categories between each of the California National Parks.")
                                      ),
                         mainPanel(plotOutput("category_plot"))
                       )
@@ -245,7 +247,7 @@ ui <- fluidPage(
                                        selected = "Channel Islands National Park"),
                           
                           hr(),
-                        ),
+                          helpText("Here, users can select the California National Park that they're interested in to pull up a map image of that National park. By hovering the curser of the image, users can zoom in on the image to see where certain trails, camping sites and visitor centers are located.")),
                         mainPanel(
                           uiOutput("image"),
                           tags$style('div#image:hover {
@@ -268,7 +270,7 @@ server <- function(input, output) {
   }) # Widget 1 reactive parentheses
   
   output$region_plot <- renderTmap(
-    tm_basemap("Esri.WorldTopoMap")+
+    tm_basemap("Esri.WorldStreetMap")+
     tm_shape(region_reactive()) +
       tm_polygons(fill = "nps_region", alpha = 0.3)
     
@@ -323,22 +325,22 @@ output$species_locator_plot <- renderTmap(
       tags$img(height = 600, width = 570, src = "images/death_valley_map.jpg")
     }
     else if(input$park_selected == "Joshua Tree National Park"){
-      tags$img(height = 400, width = 570, src = "images/joshua_tree_map.jpg")
+      tags$img(height = 450, width = 650, src = "images/joshua_tree_map.jpg")
     }
     else if(input$park_selected == "Lassen Volcanic National Park"){
-      tags$img(height = 600, width = 570, src = "images/lassen_volcanic_map.jpg")
+      tags$img(height = 600, width = 700, src = "images/lassen_volcanic_map.jpg")
     }
     else if(input$park_selected == "Pinnacles National Park"){
       tags$img(height = 600, width = 570, src = "images/pinnacles_map.jpg")
     }
     else if(input$park_selected == "Redwood National Park"){
-      tags$img(height = 600, width = 570, src = "images/redwood_map.jpg")
+      tags$img(height = 700, width = 600, src = "images/redwood_map.jpg")
     }
     else if(input$park_selected == "Sequoia and Kings Canyon National Parks"){
-      tags$img(height = 600, width = 570, src = "images/sequoia_map.jpg")
+      tags$img(height = 630, width = 570, src = "images/sequoia_map.jpg")
     }
     else if(input$park_selected == "Yosemite National Park"){
-      tags$img(height = 600, width = 570, src = "images/yosemite_map.jpg")
+      tags$img(height = 650, width = 600, src = "images/yosemite_map.jpg")
     }
     
   })
