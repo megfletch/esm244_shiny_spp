@@ -105,6 +105,8 @@ map_1
 
 #example code - need str_detect - using the combined data frame species_park_bound
 
+
+
 fox_select <- species_park_bound %>% 
   filter(str_detect(common_names, pattern ="fox")) %>% #fox will be the inputId
   select(common_names, name, geometry)
@@ -193,7 +195,37 @@ park_data_v2 <- read_csv(here("data", "parks.csv"))%>%
     park_name == "Joshua Tree National Park" ~ "Joshua Tree",
     park_name == "Lassen Volcanic National Park" ~ "Lassen Volcanic",
     park_name == "Yosemite National Park" ~ "Yosement",
-    park_name == "Pinnacles National Park" ~ "Pinnacles"))
+    park_name == "Pinnacles National Park" ~ "Pinnacles",
+                           park_name == "Badlands National Park" ~ "Badlands",
+                           park_name == "Big Bend National Park" ~ "Big Bend",
+                           park_name == "Canyonlands National Park" ~ "Canyonlands",
+                           park_name == "Capitol Reef National Park" ~ "Capital Reef",
+                           park_name == "Crater Lake National Park" ~ "Crater Lake",
+                           park_name == "Denali National Park and Preserve" ~ "Denali",
+                           park_name == "Everglades National Park" ~ "Everglades",
+                           park_name == "Gates of the Arctic National Park and Preserve" ~ "Gates of the Artic",
+                           park_name == "Glacier National Park" ~ "Glacier",
+                           park_name == "Glacier Bay National Park and Preserve" ~ "Glacier Bay",
+                           park_name == "Grand Canyon National Park" ~"Grand Canyon",
+                           park_name == "Great Sand Dunes National Park and Preserve" ~ "Great Sand Dunes",
+                           park_name ==  "Great Smoky Mountations National Park" ~ "Great Smoky Mountains",
+                           park_name ==  "Grand Teton National Park" ~ "Grand Teton",
+                           park_name == "Hawaii Volcanoes National Park" ~ "Hawai'i Volcanoes",
+                           park_name == "Isle Royale National Park" ~ "Isle Royale",
+                           park_name == "Katmai National Park and Preserve" ~ "Katmai",
+                           park_name == "Kenai Fjords National Park" ~ "Kenai Fjords",
+                           park_name == "Kobuk Valley National Park" ~ "Kobuk Valley",
+                           park_name == "Lake Clark National Park and Preserve" ~ "Lake Clark",
+                           park_name == "Mount Rainer National Park" ~ "Mount Rainer",
+                           park_name == "North Cascades National Park" ~ "North Cascades",
+                           park_name == "Olympic National Park" ~ "Olympic",
+                           park_name == "Petrified Forest National Park" ~ "Petrified Forest",
+                           park_name == "Rocky Mountain National Park" ~ "Rocky Mountain",
+                           park_name == "Shenandoah National Park" ~ "Shenandoah",
+                           park_name == "Voyageurs National Park" ~ "Voyageurs",
+                           park_name == "Wrangell - St Elias National Park and Preserve" ~ "Wrangell-St Elias",
+                           park_name == "Yellowstone National Park" ~ "Yellowstone",
+                           park_name == "Zion National Park" ~ "Zion"))
 
 
 #combining park data  with park boundary data (contains all 7 NPs in CA)

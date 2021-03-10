@@ -207,6 +207,10 @@ ui <- fluidPage(
                           textInput(inputId = "species_locator",
                                     label = h3("Species Locator"),
                                    value = "lion"),
+                          checkboxGroupInput(inputId = "state",
+                                             label = h3("Select State"),
+                                             choices = unique(species_park_bound$state),
+                                             selected = "CA"),
                           hr(),
                         ),
                         mainPanel(tmapOutput("species_locator_plot"))
@@ -275,7 +279,8 @@ server <- function(input, output) {
   
 species_reactive <- reactive({
   species_park_bound %>% 
-    filter(str_detect(common_names, pattern = input$species_locator))
+    filter(str_detect(common_names, pattern = input$species_locator)) %>% 
+    filter(state == input$state)
 })
 
 output$species_locator_plot <- renderTmap(
