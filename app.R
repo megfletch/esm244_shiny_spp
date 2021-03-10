@@ -286,7 +286,7 @@ species_reactive <- reactive({
 output$species_locator_plot <- renderTmap(
   tm_basemap("Esri.WorldTopoMap")+
     tm_shape(species_reactive())+
-    tm_polygons(fill = "nps_region")
+    tm_polygons(fill = "nps_region", alpha = 0.3)
 )
 
   
